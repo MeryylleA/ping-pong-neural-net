@@ -1,2 +1,1 @@
-# ping-pong-neural-net
-A ping pong game with neural network players using PyTorch
+This repository is empty. Any task executed on it should be considered a new capability and needs to be created.
