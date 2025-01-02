@@ -38,6 +38,15 @@ The purpose of this project is to create a simple game environment where neural 
 
 3. The trained models will be saved in the `models` directory.
 
+## Hyperparameter Tuning
+
+The training process includes hyperparameter tuning to find the optimal configuration for training the neural networks. The following hyperparameters are tuned:
+- Learning rates
+- Hidden layer sizes
+- Batch sizes
+
+The best model based on validation performance will be saved.
+
 ## How to Use Trained Models in the Game
 
 1. Ensure the trained models are saved in the `models` directory.

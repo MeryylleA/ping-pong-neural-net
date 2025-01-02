@@ -38,7 +38,22 @@ except pygame.error as e:
 
 check_alsa_errors()
 
+# Hyperparameter tuning
+learning_rates = [0.001, 0.01, 0.1]
+hidden_sizes = [64, 128, 256]
+batch_sizes = [32, 64, 128]
+
+best_params = player1_nn.hyperparameter_tuning(learning_rates, hidden_sizes, batch_sizes)
+best_lr, best_hs, best_bs = best_params
+
+# Update neural networks with best hyperparameters
+player1_nn = ReinforcementLearning(input_size, best_hs, output_size, best_lr)
+player2_nn = ReinforcementLearning(input_size, best_hs, output_size, best_lr)
+
 # Training loop
+best_validation_performance = float('-inf')
+best_model_state = None
+
 for episode in range(num_episodes):
     state = np.array([player1.rect.y, player2.rect.y, ball.rect.x, ball.rect.y])
     done = False
@@ -94,9 +109,15 @@ for episode in range(num_episodes):
 
     print(f"Episode {episode + 1}/{num_episodes}, Total Reward: {total_reward}")
 
+    # Save the best model based on validation performance
+    validation_performance = total_reward  # Placeholder for actual validation performance calculation
+    if validation_performance > best_validation_performance:
+        best_validation_performance = validation_performance
+        best_model_state = player1_nn.model.state_dict()
+
 try:
-    # Save trained models
-    torch.save(player1_nn.model.state_dict(), "models/player1_model.pth")
+    # Save the best model
+    torch.save(best_model_state, "models/best_player1_model.pth")
     torch.save(player2_nn.model.state_dict(), "models/player2_model.pth")
 except Exception as e:
     print(f"Error saving models: {e}")
