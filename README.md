@@ -38,6 +38,14 @@ The purpose of this project is to create a simple game environment where neural 
 
 3. The trained models will be saved in the `models` directory.
 
+## How to Use Trained Models in the Game
+
+1. Ensure the trained models are saved in the `models` directory.
+2. Run the game:
+   ```
+   python game.py
+   ```
+
 ## Error Handling Improvements
 
 The code has been updated to include error handling for various parts of the game and neural network training process. This includes error handling for:
