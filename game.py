@@ -1,6 +1,7 @@
 import pygame
 import random
 import alsaaudio
+import torch
 from neural_network import ReinforcementLearning
 
 # Initialize Pygame
@@ -55,13 +56,16 @@ class Paddle(pygame.sprite.Sprite):
     def update(self, y=None):
         if self.neural_network is not None:
             state = [self.rect.y, ball.rect.x, ball.rect.y]
-            y = self.neural_network.model(torch.tensor(state, dtype=torch.float32)).item()
+            y = self.convert_nn_output(self.neural_network.model(torch.tensor(state, dtype=torch.float32)).item())
         if y is not None:
             self.rect.y = y
         if self.rect.y < 0:
             self.rect.y = 0
         elif self.rect.y > SCREEN_HEIGHT - PADDLE_HEIGHT:
             self.rect.y = SCREEN_HEIGHT - PADDLE_HEIGHT
+
+    def convert_nn_output(self, output):
+        return max(0, min(SCREEN_HEIGHT - PADDLE_HEIGHT, output))
 
 # Ball class
 class Ball(pygame.sprite.Sprite):

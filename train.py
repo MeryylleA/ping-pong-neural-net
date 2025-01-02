@@ -55,8 +55,8 @@ for episode in range(num_episodes):
 
         try:
             # Update player positions
-            player1.update(action1)
-            player2.update(action2)
+            player1.update(player1_nn.convert_nn_output(action1))
+            player2.update(player2_nn.convert_nn_output(action2))
 
             # Update ball position
             ball.update()
