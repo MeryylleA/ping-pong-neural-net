@@ -47,6 +47,15 @@ The training process includes hyperparameter tuning to find the optimal configur
 
 The best model based on validation performance will be saved.
 
+## Advanced Reinforcement Learning Techniques
+
+The project now includes advanced reinforcement learning techniques to improve the training process. These techniques include:
+
+- **Deep Q-Networks (DQN)**: Implemented in the `ReinforcementLearning` class to improve the training process.
+- **Experience Replay**: Stores and reuses past experiences during training to help stabilize the learning process.
+- **Target Networks**: Reduces the correlation between the target and predicted Q-values, improving the stability of the training process.
+- **Epsilon-Greedy Policy**: Used for action selection during training to balance exploration and exploitation.
+
 ## How to Use Trained Models in the Game
 
 1. Ensure the trained models are saved in the `models` directory.

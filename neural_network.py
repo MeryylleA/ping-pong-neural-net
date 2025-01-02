@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import random
+from collections import deque
 
 class NeuralNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
@@ -17,8 +19,16 @@ class NeuralNetwork(nn.Module):
 class ReinforcementLearning:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01):
         self.model = NeuralNetwork(input_size, hidden_size, output_size)
+        self.target_model = NeuralNetwork(input_size, hidden_size, output_size)
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.criterion = nn.MSELoss()
+        self.memory = deque(maxlen=10000)
+        self.batch_size = 64
+        self.gamma = 0.99
+        self.update_target_network()
+
+    def update_target_network(self):
+        self.target_model.load_state_dict(self.model.state_dict())
 
     def train(self, state, action, reward, next_state, done):
         try:
@@ -31,21 +41,32 @@ class ReinforcementLearning:
             print(f"Error creating tensors: {e}")
             return
 
+        self.memory.append((state, action, reward, next_state, done))
+
+        if len(self.memory) < self.batch_size:
+            return
+
+        batch = random.sample(self.memory, self.batch_size)
+        states, actions, rewards, next_states, dones = zip(*batch)
+
+        states = torch.stack(states)
+        actions = torch.stack(actions)
+        rewards = torch.stack(rewards)
+        next_states = torch.stack(next_states)
+        dones = torch.stack(dones)
+
         try:
-            q_values = self.model(state)
-            next_q_values = self.model(next_state)
+            q_values = self.model(states)
+            next_q_values = self.target_model(next_states)
         except Exception as e:
             print(f"Error during model forward pass: {e}")
             return
 
-        try:
-            q_value = q_values.gather(0, action)
-            next_q_value = next_q_values.max(0)[0]
-            expected_q_value = reward + (1 - done) * next_q_value
-            loss = self.criterion(q_value, expected_q_value.unsqueeze(0))
-        except Exception as e:
-            print(f"Error calculating loss: {e}")
-            return
+        q_value = q_values.gather(1, actions.unsqueeze(1)).squeeze(1)
+        next_q_value = next_q_values.max(1)[0]
+        expected_q_value = rewards + (1 - dones) * self.gamma * next_q_value
+
+        loss = self.criterion(q_value, expected_q_value)
 
         try:
             self.optimizer.zero_grad()
