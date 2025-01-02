@@ -1,5 +1,6 @@
 import pygame
 import random
+import alsaaudio
 
 # Initialize Pygame
 try:
@@ -7,6 +8,14 @@ try:
 except pygame.error as e:
     print(f"Error initializing Pygame: {e}")
     exit()
+
+def check_alsa_errors():
+    try:
+        alsaaudio.cards()
+    except alsaaudio.ALSAAudioError as e:
+        print(f"ALSA error: {e}")
+
+check_alsa_errors()
 
 # Screen dimensions
 SCREEN_WIDTH = 800
