@@ -2,7 +2,11 @@ import pygame
 import random
 
 # Initialize Pygame
-pygame.init()
+try:
+    pygame.init()
+except pygame.error as e:
+    print(f"Error initializing Pygame: {e}")
+    exit()
 
 # Screen dimensions
 SCREEN_WIDTH = 800
@@ -20,8 +24,12 @@ PADDLE_HEIGHT = 100
 BALL_SIZE = 10
 
 # Create the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Ping Pong Game with Neural Networks")
+try:
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Ping Pong Game with Neural Networks")
+except pygame.error as e:
+    print(f"Error creating screen: {e}")
+    exit()
 
 # Paddle class
 class Paddle(pygame.sprite.Sprite):
@@ -63,9 +71,13 @@ class Ball(pygame.sprite.Sprite):
             self.speed_x *= -1
 
 # Create paddles and ball
-player1 = Paddle(50, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
-player2 = Paddle(SCREEN_WIDTH - 50 - PADDLE_WIDTH, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
-ball = Ball()
+try:
+    player1 = Paddle(50, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
+    player2 = Paddle(SCREEN_WIDTH - 50 - PADDLE_WIDTH, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
+    ball = Ball()
+except pygame.error as e:
+    print(f"Error creating paddles or ball: {e}")
+    exit()
 
 # Create sprite groups
 all_sprites = pygame.sprite.Group()
@@ -78,27 +90,39 @@ running = True
 clock = pygame.time.Clock()
 
 while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    try:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+    except pygame.error as e:
+        print(f"Error handling events: {e}")
+        running = False
 
-    # Update game objects
-    all_sprites.update()
+    try:
+        # Update game objects
+        all_sprites.update()
 
-    # Check for collisions
-    if pygame.sprite.collide_rect(ball, player1) or pygame.sprite.collide_rect(ball, player2):
-        ball.speed_x *= -1
+        # Check for collisions
+        if pygame.sprite.collide_rect(ball, player1) or pygame.sprite.collide_rect(ball, player2):
+            ball.speed_x *= -1
+    except pygame.error as e:
+        print(f"Error updating sprites or checking collisions: {e}")
+        running = False
 
-    # Clear the screen
-    screen.fill(BLACK)
+    try:
+        # Clear the screen
+        screen.fill(BLACK)
 
-    # Draw all sprites
-    all_sprites.draw(screen)
+        # Draw all sprites
+        all_sprites.draw(screen)
 
-    # Update the display
-    pygame.display.flip()
+        # Update the display
+        pygame.display.flip()
 
-    # Cap the frame rate
-    clock.tick(60)
+        # Cap the frame rate
+        clock.tick(60)
+    except pygame.error as e:
+        print(f"Error updating screen or capping frame rate: {e}")
+        running = False
 
 pygame.quit()
