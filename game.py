@@ -1,6 +1,7 @@
 import pygame
 import random
 import alsaaudio
+import torch
 from neural_network import ReinforcementLearning
 
 # Initialize Pygame
