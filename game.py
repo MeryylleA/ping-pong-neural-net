@@ -1,6 +1,7 @@
 import pygame
 import random
 import alsaaudio
+from neural_network import ReinforcementLearning
 
 # Initialize Pygame
 try:
@@ -42,15 +43,19 @@ except pygame.error as e:
 
 # Paddle class
 class Paddle(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, neural_network=None):
         super().__init__()
         self.image = pygame.Surface([PADDLE_WIDTH, PADDLE_HEIGHT])
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.neural_network = neural_network
 
     def update(self, y=None):
+        if self.neural_network is not None:
+            state = [self.rect.y, ball.rect.x, ball.rect.y]
+            y = self.neural_network.model(torch.tensor(state, dtype=torch.float32)).item()
         if y is not None:
             self.rect.y = y
         if self.rect.y < 0:
@@ -92,10 +97,14 @@ class Ball(pygame.sprite.Sprite):
         self.speed_x = random.choice([-5, 5])
         self.speed_y = random.choice([-5, 5])
 
+# Initialize neural networks for both players
+player1_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
+player2_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
+
 # Create paddles and ball
 try:
-    player1 = Paddle(50, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
-    player2 = Paddle(SCREEN_WIDTH - 50 - PADDLE_WIDTH, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2)
+    player1 = Paddle(50, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2, neural_network=player1_nn)
+    player2 = Paddle(SCREEN_WIDTH - 50 - PADDLE_WIDTH, SCREEN_HEIGHT // 2 - PADDLE_HEIGHT // 2, neural_network=player2_nn)
     ball = Ball()
 except pygame.error as e:
     print(f"Error creating paddles or ball: {e}")
