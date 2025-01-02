@@ -21,25 +21,39 @@ class ReinforcementLearning:
         self.criterion = nn.MSELoss()
 
     def train(self, state, action, reward, next_state, done):
-        state = torch.tensor(state, dtype=torch.float32)
-        next_state = torch.tensor(next_state, dtype=torch.float32)
-        action = torch.tensor(action, dtype=torch.int64)
-        reward = torch.tensor(reward, dtype=torch.float32)
-        done = torch.tensor(done, dtype=torch.float32)
+        try:
+            state = torch.tensor(state, dtype=torch.float32)
+            next_state = torch.tensor(next_state, dtype=torch.float32)
+            action = torch.tensor(action, dtype=torch.int64)
+            reward = torch.tensor(reward, dtype=torch.float32)
+            done = torch.tensor(done, dtype=torch.float32)
+        except Exception as e:
+            print(f"Error creating tensors: {e}")
+            return
 
-        q_values = self.model(state)
-        next_q_values = self.model(next_state)
+        try:
+            q_values = self.model(state)
+            next_q_values = self.model(next_state)
+        except Exception as e:
+            print(f"Error during model forward pass: {e}")
+            return
 
-        q_value = q_values.gather(0, action)
-        next_q_value = next_q_values.max(0)[0]
+        try:
+            q_value = q_values.gather(0, action)
+            next_q_value = next_q_values.max(0)[0]
+            expected_q_value = reward + (1 - done) * next_q_value
+            loss = self.criterion(q_value, expected_q_value.unsqueeze(0))
+        except Exception as e:
+            print(f"Error calculating loss: {e}")
+            return
 
-        expected_q_value = reward + (1 - done) * next_q_value
-
-        loss = self.criterion(q_value, expected_q_value.unsqueeze(0))
-
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+        try:
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+        except Exception as e:
+            print(f"Error during optimizer step: {e}")
+            return
 
     def continuous_learning(self, state, action, reward, next_state, done):
         self.train(state, action, reward, next_state, done)
