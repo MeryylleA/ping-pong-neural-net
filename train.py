@@ -18,6 +18,9 @@ hidden_size = 128
 output_size = 1
 learning_rate = 0.01
 num_episodes = 1000
+epsilon_start = 1.0
+epsilon_end = 0.01
+epsilon_decay = 0.995
 
 # Initialize neural networks for both players
 try:
@@ -53,6 +56,7 @@ player2_nn = ReinforcementLearning(input_size, best_hs, output_size, best_lr)
 # Training loop
 best_validation_performance = float('-inf')
 best_model_state = None
+epsilon = epsilon_start
 
 for episode in range(num_episodes):
     state = np.array([player1.rect.y, player2.rect.y, ball.rect.x, ball.rect.y])
@@ -61,9 +65,13 @@ for episode in range(num_episodes):
 
     while not done:
         try:
-            # Get actions from neural networks
-            action1 = player1_nn.model(torch.tensor(state, dtype=torch.float32)).item()
-            action2 = player2_nn.model(torch.tensor(state, dtype=torch.float32)).item()
+            # Epsilon-greedy policy for action selection
+            if np.random.rand() < epsilon:
+                action1 = np.random.uniform(0, 600 - 100)
+                action2 = np.random.uniform(0, 600 - 100)
+            else:
+                action1 = player1_nn.model(torch.tensor(state, dtype=torch.float32)).item()
+                action2 = player2_nn.model(torch.tensor(state, dtype=torch.float32)).item()
         except Exception as e:
             print(f"Error retrieving actions from neural networks: {e}")
             exit()
@@ -114,6 +122,9 @@ for episode in range(num_episodes):
     if validation_performance > best_validation_performance:
         best_validation_performance = validation_performance
         best_model_state = player1_nn.model.state_dict()
+
+    # Update epsilon
+    epsilon = max(epsilon_end, epsilon_decay * epsilon)
 
 try:
     # Save the best model
