@@ -57,3 +57,6 @@ class ReinforcementLearning:
 
     def continuous_learning(self, state, action, reward, next_state, done):
         self.train(state, action, reward, next_state, done)
+
+    def convert_nn_output(self, output):
+        return max(0, min(600 - 100, output))
