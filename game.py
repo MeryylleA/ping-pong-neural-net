@@ -77,8 +77,20 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.y <= 0 or self.rect.y >= SCREEN_HEIGHT - BALL_SIZE:
             self.speed_y *= -1
 
-        if self.rect.x <= 0 or self.rect.x >= SCREEN_WIDTH - BALL_SIZE:
-            self.speed_x *= -1
+        if self.rect.x <= 0:
+            self.reset_position()
+            global player2_score
+            player2_score += 1
+        elif self.rect.x >= SCREEN_WIDTH - BALL_SIZE:
+            self.reset_position()
+            global player1_score
+            player1_score += 1
+
+    def reset_position(self):
+        self.rect.x = SCREEN_WIDTH // 2
+        self.rect.y = SCREEN_HEIGHT // 2
+        self.speed_x = random.choice([-5, 5])
+        self.speed_y = random.choice([-5, 5])
 
 # Create paddles and ball
 try:
@@ -94,6 +106,10 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(player1)
 all_sprites.add(player2)
 all_sprites.add(ball)
+
+# Initialize scores
+player1_score = 0
+player2_score = 0
 
 # Main game loop
 running = True
@@ -125,6 +141,13 @@ while running:
 
         # Draw all sprites
         all_sprites.draw(screen)
+
+        # Display scores
+        font = pygame.font.Font(None, 74)
+        text = font.render(str(player1_score), 1, WHITE)
+        screen.blit(text, (250, 10))
+        text = font.render(str(player2_score), 1, WHITE)
+        screen.blit(text, (510, 10))
 
         # Update the display
         pygame.display.flip()

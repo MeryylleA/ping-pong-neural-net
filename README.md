@@ -71,3 +71,7 @@ The code has also been updated to fix bugs and implement significant improvement
 - Enhanced reward calculation logic
 - Optimized neural network training process
 - Better handling of edge cases and unexpected situations
+
+## Scoring System
+
+The game now includes a scoring system to keep track of points for each player. The scores are displayed on the screen during the game. When a player scores a point, the ball position is reset, and the scores are updated accordingly.
