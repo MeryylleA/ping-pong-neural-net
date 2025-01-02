@@ -1,7 +1,0 @@
-{
-  "tasks": {
-    "test": "python train.py",
-    "build": "pip install -r requirements.txt",
-    "launch": "python train.py"
-  }
-}
