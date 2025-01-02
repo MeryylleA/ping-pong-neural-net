@@ -10,8 +10,8 @@ The purpose of this project is to create a simple game environment where neural 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/githubnext/workspace-blank.git
-   cd workspace-blank
+   git clone https://github.com/MeryylleA/ping-pong-neural-net.git
+   cd ping-pong-neural-net
    ```
 
 2. Install the required dependencies:
@@ -26,23 +26,17 @@ The purpose of this project is to create a simple game environment where neural 
 
 ## How to Train the Neural Networks
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/githubnext/workspace-blank.git
-   cd workspace-blank
-   ```
-
-2. Install the required dependencies:
+1. Install the required dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-3. Train the neural networks:
+2. Train the neural networks:
    ```
    python train.py
    ```
 
-4. The trained models will be saved in the `models` directory.
+3. The trained models will be saved in the `models` directory.
 
 ## Error Handling Improvements
 
