@@ -2,4 +2,3 @@ pygame
 torch
 numpy
 pyalsaaudio
-libasound2-dev
