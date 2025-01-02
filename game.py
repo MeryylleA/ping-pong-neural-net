@@ -41,8 +41,9 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def update(self, y):
-        self.rect.y = y
+    def update(self, y=None):
+        if y is not None:
+            self.rect.y = y
         if self.rect.y < 0:
             self.rect.y = 0
         elif self.rect.y > SCREEN_HEIGHT - PADDLE_HEIGHT:
