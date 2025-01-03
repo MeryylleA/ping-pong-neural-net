@@ -55,6 +55,7 @@ The project now includes advanced reinforcement learning techniques to improve t
 - **Experience Replay**: Stores and reuses past experiences during training to help stabilize the learning process.
 - **Target Networks**: Reduces the correlation between the target and predicted Q-values, improving the stability of the training process.
 - **Epsilon-Greedy Policy**: Used for action selection during training to balance exploration and exploitation.
+- **Enhanced Ball Physics**: The game now includes more realistic ball physics, such as spin and friction, to make the game more challenging and engaging. The ball's speed and direction are adjusted based on the angle and speed of the paddle when it hits the ball. Different ball types with varying properties, such as weight and bounce, are introduced to add variety to the gameplay.
 
 ## How to Use Trained Models in the Game
 
@@ -95,3 +96,14 @@ The code has also been updated to fix bugs and implement significant improvement
 ## Scoring System
 
 The game now includes a scoring system to keep track of points for each player. The scores are displayed on the screen during the game. When a player scores a point, the ball position is reset, and the scores are updated accordingly.
+
+## Enhanced Ball Physics
+
+The game now includes enhanced ball physics to make the gameplay more challenging and engaging. The following features have been added:
+
+- **Spin and Friction**: The ball now has spin and friction, which affect its movement and interactions with the paddles and walls.
+- **Angle and Speed Adjustment**: The ball's speed and direction are adjusted based on the angle and speed of the paddle when it hits the ball.
+- **Different Ball Types**: The game introduces different ball types with varying properties, such as weight and bounce, to add variety to the gameplay. The ball types include:
+  - **Normal Ball**: Standard ball with default properties.
+  - **Heavy Ball**: Heavier ball with reduced bounce.
+  - **Light Ball**: Lighter ball with increased bounce.
