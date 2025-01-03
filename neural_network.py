@@ -104,3 +104,33 @@ class ReinforcementLearning:
         lr = initial_lr * (lr_decay ** epoch)
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
+
+class AdvancedReinforcementLearning(ReinforcementLearning):
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01):
+        super().__init__(input_size, hidden_size, output_size, learning_rate)
+        self.epsilon = 1.0
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.995
+
+    def train(self, state, action, reward, next_state, done):
+        super().train(state, action, reward, next_state, done)
+        if done:
+            self.update_target_network()
+
+    def select_action(self, state):
+        if random.random() < self.epsilon:
+            return random.uniform(0, 600 - 100)
+        else:
+            with torch.no_grad():
+                return self.model(torch.tensor(state, dtype=torch.float32)).item()
+
+    def update_epsilon(self):
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
+
+    def save_model(self, path):
+        torch.save(self.model.state_dict(), path)
+
+    def load_model(self, path):
+        self.model.load_state_dict(torch.load(path))
+        self.model.eval()
