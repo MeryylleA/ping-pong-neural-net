@@ -2,7 +2,7 @@ import pygame
 import random
 import alsaaudio
 import torch
-from neural_network import ReinforcementLearning
+from neural_network import AdvancedReinforcementLearning
 
 # Initialize Pygame
 try:
@@ -57,7 +57,7 @@ class Paddle(pygame.sprite.Sprite):
     def update(self, y=None):
         if self.neural_network is not None:
             state = [self.rect.y, ball.rect.x, ball.rect.y]
-            y = self.convert_nn_output(self.neural_network.model(torch.tensor(state, dtype=torch.float32)).item())
+            y = self.convert_nn_output(self.neural_network.select_action(state))
         if y is not None:
             self.rect.y = y
         if self.rect.y < 0:
@@ -145,8 +145,8 @@ class Ball(pygame.sprite.Sprite):
         return False
 
 # Initialize neural networks for both players
-player1_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
-player2_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
+player1_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
+player2_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
 
 # Create paddles and ball
 try:

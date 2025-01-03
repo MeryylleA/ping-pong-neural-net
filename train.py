@@ -4,7 +4,7 @@ import numpy as np
 import pygame
 import alsaaudio
 from game import Paddle, Ball
-from neural_network import NeuralNetwork, ReinforcementLearning
+from neural_network import AdvancedReinforcementLearning
 
 def check_alsa_errors():
     try:
@@ -24,8 +24,8 @@ epsilon_decay = 0.995
 
 # Initialize neural networks for both players
 try:
-    player1_nn = ReinforcementLearning(input_size, hidden_size, output_size, learning_rate)
-    player2_nn = ReinforcementLearning(input_size, hidden_size, output_size, learning_rate)
+    player1_nn = AdvancedReinforcementLearning(input_size, hidden_size, output_size, learning_rate)
+    player2_nn = AdvancedReinforcementLearning(input_size, hidden_size, output_size, learning_rate)
 except Exception as e:
     print(f"Error initializing neural networks: {e}")
     exit()
@@ -50,8 +50,8 @@ best_params = player1_nn.hyperparameter_tuning(learning_rates, hidden_sizes, bat
 best_lr, best_hs, best_bs = best_params
 
 # Update neural networks with best hyperparameters
-player1_nn = ReinforcementLearning(input_size, best_hs, output_size, best_lr)
-player2_nn = ReinforcementLearning(input_size, best_hs, output_size, best_lr)
+player1_nn = AdvancedReinforcementLearning(input_size, best_hs, output_size, best_lr)
+player2_nn = AdvancedReinforcementLearning(input_size, best_hs, output_size, best_lr)
 
 # Training loop
 best_validation_performance = float('-inf')
@@ -128,8 +128,8 @@ for episode in range(num_episodes):
 
 try:
     # Save the best model
-    torch.save(best_model_state, "models/best_player1_model.pth")
-    torch.save(player2_nn.model.state_dict(), "models/player2_model.pth")
+    player1_nn.save_model("models/best_player1_model.pth")
+    player2_nn.save_model("models/player2_model.pth")
 except Exception as e:
     print(f"Error saving models: {e}")
     exit()
