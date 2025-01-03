@@ -69,15 +69,27 @@ class Paddle(pygame.sprite.Sprite):
 
 # Ball class
 class Ball(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, ball_type="normal"):
         super().__init__()
         self.image = pygame.Surface([BALL_SIZE, BALL_SIZE])
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
         self.rect.x = SCREEN_WIDTH // 2
         self.rect.y = SCREEN_HEIGHT // 2
-        self.speed_x = random.choice([-5, 5])
-        self.speed_y = random.choice([-5, 5])
+        self.ball_type = ball_type
+        self.set_ball_properties()
+        self.spin = 0
+
+    def set_ball_properties(self):
+        if self.ball_type == "normal":
+            self.weight = 1
+            self.bounce = 1
+        elif self.ball_type == "heavy":
+            self.weight = 2
+            self.bounce = 0.8
+        elif self.ball_type == "light":
+            self.weight = 0.5
+            self.bounce = 1.2
 
     def update(self):
         self.rect.x += self.speed_x
@@ -95,11 +107,22 @@ class Ball(pygame.sprite.Sprite):
             global player1_score
             player1_score += 1
 
+        self.apply_friction()
+
     def reset_position(self):
         self.rect.x = SCREEN_WIDTH // 2
         self.rect.y = SCREEN_HEIGHT // 2
-        self.speed_x = random.choice([-5, 5])
-        self.speed_y = random.choice([-5, 5])
+        self.speed_x = random.choice([-5, 5]) * self.bounce
+        self.speed_y = random.choice([-5, 5]) * self.bounce
+        self.spin = 0
+
+    def apply_friction(self):
+        self.speed_x *= 0.99
+        self.speed_y *= 0.99
+
+    def apply_spin(self, paddle_speed):
+        self.spin += paddle_speed * 0.1
+        self.speed_y += self.spin
 
 # Initialize neural networks for both players
 player1_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
@@ -144,6 +167,8 @@ while running:
         # Check for collisions
         if pygame.sprite.collide_rect(ball, player1) or pygame.sprite.collide_rect(ball, player2):
             ball.speed_x *= -1
+            paddle_speed = player1.rect.y - player2.rect.y
+            ball.apply_spin(paddle_speed)
     except pygame.error as e:
         print(f"Error updating sprites or checking collisions: {e}")
         running = False
