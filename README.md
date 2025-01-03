@@ -107,3 +107,4 @@ The game now includes enhanced ball physics to make the gameplay more challengin
   - **Normal Ball**: Standard ball with default properties.
   - **Heavy Ball**: Heavier ball with reduced bounce.
   - **Light Ball**: Lighter ball with increased bounce.
+- **Advanced Collision Detection**: The game now includes more sophisticated collision detection algorithms to handle edge cases and improve accuracy. Bounding boxes and pixel-perfect collision detection are used for more precise interactions between the ball and paddles.
