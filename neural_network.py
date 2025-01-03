@@ -134,3 +134,17 @@ class AdvancedReinforcementLearning(ReinforcementLearning):
     def load_model(self, path):
         self.model.load_state_dict(torch.load(path))
         self.model.eval()
+
+    def calculate_reward(self, rally_duration, precision):
+        return rally_duration * precision
+
+    def curriculum_learning(self, performance):
+        if performance > 0.8:
+            self.gamma = 0.95
+        elif performance > 0.6:
+            self.gamma = 0.9
+        else:
+            self.gamma = 0.85
+
+    def visualize_training(self, state, action, reward, next_state, done):
+        print(f"State: {state}, Action: {action}, Reward: {reward}, Next State: {next_state}, Done: {done}")

@@ -53,6 +53,7 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.neural_network = neural_network
+        self.power_up = None
 
     def update(self, y=None):
         if self.neural_network is not None:
@@ -74,6 +75,13 @@ class Paddle(pygame.sprite.Sprite):
     def get_mask(self):
         return pygame.mask.from_surface(self.image)
 
+    def apply_power_up(self, power_up):
+        self.power_up = power_up
+        if power_up == "speed":
+            self.speed *= 1.5
+        elif power_up == "size":
+            self.rect.height *= 1.5
+
 # Ball class
 class Ball(pygame.sprite.Sprite):
     def __init__(self, ball_type="normal"):
@@ -86,6 +94,7 @@ class Ball(pygame.sprite.Sprite):
         self.ball_type = ball_type
         self.set_ball_properties()
         self.spin = 0
+        self.rally_duration = 0
 
     def set_ball_properties(self):
         if self.ball_type == "normal":
@@ -115,6 +124,7 @@ class Ball(pygame.sprite.Sprite):
             player1_score += 1
 
         self.apply_friction()
+        self.rally_duration += 1
 
     def reset_position(self):
         self.rect.x = SCREEN_WIDTH // 2
@@ -122,6 +132,7 @@ class Ball(pygame.sprite.Sprite):
         self.speed_x = random.choice([-5, 5]) * self.bounce
         self.speed_y = random.choice([-5, 5]) * self.bounce
         self.spin = 0
+        self.rally_duration = 0
 
     def apply_friction(self):
         self.speed_x *= 0.99
