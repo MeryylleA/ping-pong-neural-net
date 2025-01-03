@@ -16,6 +16,7 @@ def check_alsa_errors():
         alsaaudio.cards()
     except alsaaudio.ALSAAudioError as e:
         print(f"ALSA error: {e}")
+    exit()
 
 check_alsa_errors()
 
@@ -66,6 +67,12 @@ class Paddle(pygame.sprite.Sprite):
 
     def convert_nn_output(self, output):
         return max(0, min(SCREEN_HEIGHT - PADDLE_HEIGHT, output))
+
+    def get_bounding_box(self):
+        return self.rect
+
+    def get_mask(self):
+        return pygame.mask.from_surface(self.image)
 
 # Ball class
 class Ball(pygame.sprite.Sprite):
@@ -124,6 +131,19 @@ class Ball(pygame.sprite.Sprite):
         self.spin += paddle_speed * 0.1
         self.speed_y += self.spin
 
+    def get_bounding_box(self):
+        return self.rect
+
+    def get_mask(self):
+        return pygame.mask.from_surface(self.image)
+
+    def check_collision(self, paddle):
+        if self.rect.colliderect(paddle.get_bounding_box()):
+            offset = (paddle.rect.x - self.rect.x, paddle.rect.y - self.rect.y)
+            if paddle.get_mask().overlap(self.get_mask(), offset):
+                return True
+        return False
+
 # Initialize neural networks for both players
 player1_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
 player2_nn = ReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
@@ -165,7 +185,7 @@ while running:
         all_sprites.update()
 
         # Check for collisions
-        if pygame.sprite.collide_rect(ball, player1) or pygame.sprite.collide_rect(ball, player2):
+        if ball.check_collision(player1) or ball.check_collision(player2):
             ball.speed_x *= -1
             paddle_speed = player1.rect.y - player2.rect.y
             ball.apply_spin(paddle_speed)
