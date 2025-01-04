@@ -86,7 +86,7 @@ class ReinforcementLearning:
         best_params = None
         best_performance = float('-inf')
 
-        for lr in learning_rates:
+        for lr in learning rates:
             for hs in hidden_sizes:
                 for bs in batch_sizes:
                     performance = self.evaluate_model(lr, hs, bs)

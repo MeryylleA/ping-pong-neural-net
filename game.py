@@ -43,6 +43,17 @@ except pygame.error as e:
     print(f"Error creating screen: {e}")
     exit()
 
+# Sound effects and background music
+try:
+    pygame.mixer.init()
+    hit_sound = pygame.mixer.Sound("hit.wav")
+    score_sound = pygame.mixer.Sound("score.wav")
+    pygame.mixer.music.load("background_music.mp3")
+    pygame.mixer.music.play(-1)
+except pygame.error as e:
+    print(f"Error initializing sound: {e}")
+    exit()
+
 # Paddle class
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, x, y, neural_network=None):
@@ -118,10 +129,12 @@ class Ball(pygame.sprite.Sprite):
             self.reset_position()
             global player2_score
             player2_score += 1
+            score_sound.play()
         elif self.rect.x >= SCREEN_WIDTH - BALL_SIZE:
             self.reset_position()
             global player1_score
             player1_score += 1
+            score_sound.play()
 
         self.apply_friction()
         self.rally_duration += 1
@@ -152,6 +165,7 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.colliderect(paddle.get_bounding_box()):
             offset = (paddle.rect.x - self.rect.x, paddle.rect.y - self.rect.y)
             if paddle.get_mask().overlap(self.get_mask(), offset):
+                hit_sound.play()
                 return True
         return False
 
