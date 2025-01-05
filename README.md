@@ -301,3 +301,123 @@ The `AdvancedReinforcementLearning` class is an extension of the `ReinforcementL
 - Enhance the graphical interface with better animations and visual effects.
 - Add sound effects and background music to make the game more engaging.
 - Implement a detailed scoreboard and statistics tracking to show the performance of the neural networks over time.
+
+## New Features and Improvements
+
+The project now includes several new features and improvements to enhance the neural network and the overall game experience. These include:
+
+- **Convolutional Neural Networks (CNNs)**: Implemented in the `NeuralNetwork` class to capture spatial dependencies.
+- **Proximal Policy Optimization (PPO)**: Added in the `AdvancedReinforcementLearning` class to improve training.
+- **Reward Shaping**: Introduced in the `AdvancedReinforcementLearning` class to provide more informative feedback.
+- **Regularization Techniques**: Implemented dropout in the `NeuralNetwork` class to prevent overfitting.
+- **Transfer Learning**: Added functionality in the `AdvancedReinforcementLearning` class to pre-train on a similar task.
+- **Curriculum Learning**: Implemented in the `Paddle` class to gradually increase game difficulty.
+- **Visualization of Training Process**: Added a feature to visualize the training process and the neural network's decision-making in real-time.
+- **Increased Replay Memory and Batch Size**: Increased the size of the replay memory and batch size in the `ReinforcementLearning` class to improve stability and performance.
+
+## Instructions for Using the New Functionalities
+
+### Using Convolutional Neural Networks (CNNs)
+
+1. Initialize the `NeuralNetwork` class with CNNs:
+   ```python
+   from neural_network import NeuralNetwork
+
+   input_size = 3
+   hidden_size = 128
+   output_size = 1
+
+   cnn_nn = NeuralNetwork(input_size, hidden_size, output_size)
+   ```
+
+2. Use the CNN-based neural network in the game or training process as needed.
+
+### Using Proximal Policy Optimization (PPO)
+
+1. Initialize the `AdvancedReinforcementLearning` class with PPO:
+   ```python
+   from neural_network import AdvancedReinforcementLearning
+
+   input_size = 3
+   hidden_size = 128
+   output_size = 1
+   learning_rate = 0.01
+
+   ppo_nn = AdvancedReinforcementLearning(input_size, hidden_size, output_size, learning_rate)
+   ```
+
+2. Use the PPO-based neural network in the game or training process as needed.
+
+### Using Reward Shaping
+
+1. Implement reward shaping in the `AdvancedReinforcementLearning` class:
+   ```python
+   class AdvancedReinforcementLearning(ReinforcementLearning):
+       def reward_shaping(self, state, action, reward, next_state, done):
+           shaped_reward = reward + 0.1 * (next_state[1] - state[1])  # Example reward shaping
+           self.train(state, action, shaped_reward, next_state, done)
+   ```
+
+2. Use the reward shaping mechanism in the training process as needed.
+
+### Using Transfer Learning
+
+1. Implement transfer learning in the `AdvancedReinforcementLearning` class:
+   ```python
+   class AdvancedReinforcementLearning(ReinforcementLearning):
+       def transfer_learning(self, pre_trained_model_path):
+           self.model.load_state_dict(torch.load(pre_trained_model_path))
+           self.model.eval()
+   ```
+
+2. Use the transfer learning functionality to pre-train the neural network on a similar task and then fine-tune it on the ping pong game.
+
+### Using Curriculum Learning
+
+1. Implement curriculum learning in the `Paddle` class:
+   ```python
+   class Paddle(pygame.sprite.Sprite):
+       def __init__(self, x, y, neural_network=None):
+           super().__init__()
+           self.image = pygame.Surface([PADDLE_WIDTH, PADDLE_HEIGHT])
+           self.image.fill(WHITE)
+           self.rect = self.image.get_rect()
+           self.rect.x = x
+           self.rect.y = y
+           self.neural_network = neural_network
+           self.difficulty = 1.0
+
+       def increase_difficulty(self):
+           self.difficulty += 0.1
+   ```
+
+2. Use the curriculum learning approach to gradually increase the game difficulty as the neural network improves.
+
+### Visualizing the Training Process
+
+1. Add a feature to visualize the training process and the neural network's decision-making in real-time:
+   ```python
+   class AdvancedReinforcementLearning(ReinforcementLearning):
+       def visualize_training(self, state, action, reward, next_state, done):
+           print(f"State: {state}, Action: {action}, Reward: {reward}, Next State: {next_state}, Done: {done}")
+   ```
+
+2. Use the visualization feature to monitor the training process and the neural network's decision-making in real-time.
+
+### Increasing Replay Memory and Batch Size
+
+1. Increase the size of the replay memory and batch size in the `ReinforcementLearning` class:
+   ```python
+   class ReinforcementLearning:
+       def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01):
+           self.model = NeuralNetwork(input_size, hidden_size, output_size)
+           self.target_model = NeuralNetwork(input_size, hidden_size, output_size)
+           self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
+           self.criterion = nn.MSELoss()
+           self.memory = deque(maxlen=50000)  # Increased replay memory size
+           self.batch_size = 256  # Increased batch size
+           self.gamma = 0.99
+           self.update_target_network()
+   ```
+
+2. Use the increased replay memory and batch size to improve the stability and performance of the training process.

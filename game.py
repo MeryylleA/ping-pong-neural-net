@@ -65,6 +65,7 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.y = y
         self.neural_network = neural_network
         self.power_up = None
+        self.difficulty = 1.0
 
     def update(self, y=None):
         if self.neural_network is not None:
@@ -92,6 +93,9 @@ class Paddle(pygame.sprite.Sprite):
             self.speed *= 1.5
         elif power_up == "size":
             self.rect.height *= 1.5
+
+    def increase_difficulty(self):
+        self.difficulty += 0.1
 
 # Ball class
 class Ball(pygame.sprite.Sprite):
@@ -231,6 +235,10 @@ while running:
         screen.blit(text, (250, 10))
         text = font.render(str(player2_score), 1, WHITE)
         screen.blit(text, (510, 10))
+
+        # Visualize training process
+        player1_nn.visualize_training([player1.rect.y, ball.rect.x, ball.rect.y], player1_nn.select_action([player1.rect.y, ball.rect.x, ball.rect.y]), 0, [player1.rect.y, ball.rect.x, ball.rect.y], False)
+        player2_nn.visualize_training([player2.rect.y, ball.rect.x, ball.rect.y], player2_nn.select_action([player2.rect.y, ball.rect.x, ball.rect.y]), 0, [player2.rect.y, ball.rect.x, ball.rect.y], False)
 
         # Update the display
         pygame.display.flip()

@@ -8,11 +8,20 @@ from collections import deque
 class NeuralNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(NeuralNetwork, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.fc1 = nn.Linear(64 * 8 * 8, hidden_size)
         self.fc2 = nn.Linear(hidden_size, output_size)
+        self.dropout = nn.Dropout(p=0.5)
 
     def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = F.max_pool2d(x, 2)
+        x = F.relu(self.conv2(x))
+        x = F.max_pool2d(x, 2)
+        x = x.view(x.size(0), -1)
         x = F.relu(self.fc1(x))
+        x = self.dropout(x)
         x = self.fc2(x)
         return x
 
@@ -22,8 +31,8 @@ class ReinforcementLearning:
         self.target_model = NeuralNetwork(input_size, hidden_size, output_size)
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.criterion = nn.MSELoss()
-        self.memory = deque(maxlen=10000)
-        self.batch_size = 64
+        self.memory = deque(maxlen=20000)
+        self.batch_size = 128
         self.gamma = 0.99
         self.update_target_network()
 
@@ -148,3 +157,24 @@ class AdvancedReinforcementLearning(ReinforcementLearning):
 
     def visualize_training(self, state, action, reward, next_state, done):
         print(f"State: {state}, Action: {action}, Reward: {reward}, Next State: {next_state}, Done: {done}")
+
+    def ppo_update(self, states, actions, rewards, next_states, dones, old_log_probs, clip_param=0.2):
+        for _ in range(4):  # Update for 4 epochs
+            log_probs = self.model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+            ratios = torch.exp(log_probs - old_log_probs)
+            advantages = rewards + (1 - dones) * self.gamma * self.target_model(next_states).max(1)[0] - self.model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+            surr1 = ratios * advantages
+            surr2 = torch.clamp(ratios, 1 - clip_param, 1 + clip_param) * advantages
+            loss = -torch.min(surr1, surr2).mean()
+
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
+
+    def reward_shaping(self, state, action, reward, next_state, done):
+        shaped_reward = reward + 0.1 * (next_state[1] - state[1])  # Example reward shaping
+        self.train(state, action, shaped_reward, next_state, done)
+
+    def transfer_learning(self, pre_trained_model_path):
+        self.model.load_state_dict(torch.load(pre_trained_model_path))
+        self.model.eval()
