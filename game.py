@@ -1,6 +1,5 @@
 import pygame
 import random
-import alsaaudio
 import torch
 from neural_network import AdvancedReinforcementLearning
 
@@ -10,15 +9,6 @@ try:
 except pygame.error as e:
     print(f"Error initializing Pygame: {e}")
     exit()
-
-def check_alsa_errors():
-    try:
-        alsaaudio.cards()
-    except alsaaudio.ALSAAudioError as e:
-        print(f"ALSA error: {e}")
-    exit()
-
-check_alsa_errors()
 
 # Screen dimensions
 SCREEN_WIDTH = 800
