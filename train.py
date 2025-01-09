@@ -6,7 +6,7 @@ from game import Paddle, Ball
 from neural_network import AdvancedReinforcementLearning
 
 # Hyperparameters
-input_size = 4
+input_size = 3
 hidden_size = 256
 output_size = 1
 learning_rate = 0.01
