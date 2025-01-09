@@ -110,6 +110,8 @@ class Ball(pygame.sprite.Sprite):
         self.rally_duration = 0
         self.gravity = 0.1
         self.air_resistance = 0.99
+        self.speed_x = 0  # P470d
+        self.speed_y = 0  # P470d
 
     def set_ball_properties(self):
         if self.ball_type == "normal":
