@@ -2,15 +2,8 @@ import torch
 import torch.optim as optim
 import numpy as np
 import pygame
-import alsaaudio
 from game import Paddle, Ball
 from neural_network import AdvancedReinforcementLearning
-
-def check_alsa_errors():
-    try:
-        alsaaudio.cards()
-    except alsaaudio.ALSAAudioError as e:
-        print(f"ALSA error: {e}")
 
 # Hyperparameters
 input_size = 4
@@ -38,8 +31,6 @@ try:
 except pygame.error as e:
     print(f"Error initializing game objects: {e}")
     exit()
-
-check_alsa_errors()
 
 # Hyperparameter tuning
 learning_rates = [0.001, 0.01, 0.1]
