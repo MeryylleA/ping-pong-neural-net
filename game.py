@@ -110,6 +110,8 @@ class Ball(pygame.sprite.Sprite):
         self.set_ball_properties()
         self.spin = 0
         self.rally_duration = 0
+        self.gravity = 0.1
+        self.air_resistance = 0.99
 
     def set_ball_properties(self):
         if self.ball_type == "normal":
@@ -141,6 +143,7 @@ class Ball(pygame.sprite.Sprite):
             score_sound.play()
 
         self.apply_friction()
+        self.apply_gravity()
         self.rally_duration += 1
 
     def reset_position(self):
@@ -152,8 +155,11 @@ class Ball(pygame.sprite.Sprite):
         self.rally_duration = 0
 
     def apply_friction(self):
-        self.speed_x *= 0.99
-        self.speed_y *= 0.99
+        self.speed_x *= self.air_resistance
+        self.speed_y *= self.air_resistance
+
+    def apply_gravity(self):
+        self.speed_y += self.gravity
 
     def apply_spin(self, paddle_speed):
         self.spin += paddle_speed * 0.1
