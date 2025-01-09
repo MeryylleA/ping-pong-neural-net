@@ -123,3 +123,38 @@ The code has been updated to include error handling for various parts of the gam
    python train.py
    ```
 3. The trained models will be saved in the `models` directory.
+
+## Audio Device Requirement
+
+The game requires an audio device for sound effects and background music. If no audio device is available, the game will disable sound.
+
+### Disabling Sound
+
+If you do not have an audio device or if you encounter issues with sound, you can disable sound by modifying the `game.py` file. Locate the following section in the code:
+
+```python
+# Check for audio device
+audio_device_available = True
+try:
+    pygame.mixer.init()
+except pygame.error as e:
+    print(f"Error initializing sound: {e}")
+    audio_device_available = False
+
+# Sound effects and background music
+if audio_device_available:
+    try:
+        hit_sound = pygame.mixer.Sound("hit.wav")
+        score_sound = pygame.mixer.Sound("score.wav")
+        pygame.mixer.music.load("background_music.mp3")
+        pygame.mixer.music.play(-1)
+    except pygame.error as e:
+        print(f"Error loading sound files: {e}")
+        audio_device_available = False
+```
+
+You can disable sound by setting `audio_device_available` to `False`:
+
+```python
+audio_device_available = False
+```
