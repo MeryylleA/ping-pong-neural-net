@@ -174,8 +174,8 @@ class Ball(pygame.sprite.Sprite):
         return False
 
 # Initialize neural networks for both players
-player1_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
-player2_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=128, output_size=1)
+player1_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=256, output_size=1)
+player2_nn = AdvancedReinforcementLearning(input_size=3, hidden_size=256, output_size=1)
 
 # Create paddles and ball
 try:

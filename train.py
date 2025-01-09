@@ -14,7 +14,7 @@ def check_alsa_errors():
 
 # Hyperparameters
 input_size = 4
-hidden_size = 128
+hidden_size = 256
 output_size = 1
 learning_rate = 0.01
 num_episodes = 1000
