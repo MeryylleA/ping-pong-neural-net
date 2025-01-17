@@ -110,8 +110,9 @@ class Ball(pygame.sprite.Sprite):
         self.rally_duration = 0
         self.gravity = 0.1
         self.air_resistance = 0.99
-        self.speed_x = 0  # P470d
-        self.speed_y = 0  # P470d
+        self.wind = 0.05
+        self.speed_x = 0
+        self.speed_y = 0
 
     def set_ball_properties(self):
         if self.ball_type == "normal":
@@ -146,6 +147,7 @@ class Ball(pygame.sprite.Sprite):
 
         self.apply_friction()
         self.apply_gravity()
+        self.apply_wind()
         self.rally_duration += 1
 
     def reset_position(self):
@@ -162,6 +164,9 @@ class Ball(pygame.sprite.Sprite):
 
     def apply_gravity(self):
         self.speed_y += self.gravity
+
+    def apply_wind(self):
+        self.speed_x += self.wind
 
     def apply_spin(self, paddle_speed):
         self.spin += paddle_speed * 0.1
