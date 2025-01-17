@@ -72,6 +72,9 @@ The game now includes enhanced ball physics to make the gameplay more challengin
   - **Heavy Ball**: Heavier ball with reduced bounce.
   - **Light Ball**: Lighter ball with increased bounce.
 - **Advanced Collision Detection**: The game now includes more sophisticated collision detection algorithms to handle edge cases and improve accuracy. Bounding boxes and pixel-perfect collision detection are used for more precise interactions between the ball and paddles.
+- **Environmental Effects**: The game introduces environmental effects such as wind and gravity variations that affect the ball's movement.
+- **Friction and Air Resistance**: The ball's movement is now influenced by friction and air resistance, making the physics more realistic.
+- **Visual Effects for Spin**: Visual effects have been added to indicate the ball's spin.
 
 ### AdvancedReinforcementLearning Class
 
